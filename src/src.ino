@@ -8,33 +8,38 @@
 OneWire ourWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&ourWire);
 
-// Setup display:
+// Assign display:
 LedControl lc = LedControl(4,2,0,1); // DIN, CLK, CS
 
-// Setup photoresistor
+// Assign photoresistor
 const int photoPin = 27; // select the input pin for the potentiometer
 
 // Global Variables to use with Millis
 unsigned long startMillis;  //some global variables available anywhere in the program
 unsigned long currentMillis;
-const unsigned long measurement_interval = 1000; // Take a measurement every second etc.
+const unsigned long measurement_interval = 1000; // Take a measurement every second etc.- Can be changed to every minute
 
 // Global variables to use with the sensors:
 int temperature;
 int sunlight;
 
 float temp_threshold = 25.0;
-float sunlight_threshold = 10.0;
+float sunlight_threshold = 10.0; // This is for determining if the lunchbox has been in the sun. Currently not used.
 
 // Global varibles to use with the counter:
 int counter_temp = 0;
 
-// Setup the touch sensor
-int debounceTime = 1000; //debounce time for touch sensor
+// Assign the touch sensor
+int debounceTime = 50; //debounce time for touch sensor
 int tocuhPin = 15;
 
 int signal = 0;
 String input;
+
+// Define all icons:
+byte happy[] = {B00111100,B01000010,B10100101,B10000001,B10100101,B10011001,B01000010,B00111100};
+byte sad[] = {B00111100,B01000010,B10100101,B10011001,B10011001,B10100101,B01000010,B00111100};
+byte heart[] = {B00000000,B01100110,B11111111,B11111111,B01111110,B00111100,B00011000,B00000000};
 
 //////////////////////////////
 /////// Setup function ///////
@@ -101,7 +106,7 @@ void loop(){
   else {
     lc.clearDisplay(0);
   }
-
+  delay(debounceTime);
 }
 
 //////////////////////////////
@@ -134,51 +139,22 @@ void display(int counter, int sunlight_reading){
   Serial.println(intensity);
   lc.setIntensity(0,intensity);
   if (counter <= 20){
-    happySmileyMatrix();
+    display_icon(happy);
 
   } else {
-    sadSmileyMatrix();
+    display_icon(sad);
   }
 }
 
-void happySmileyMatrix(){
-  byte happy[] = {B00111100,B01000010,B10100101,B10000001,B10100101,B10011001,B01000010,B00111100};
+// Define display function
 
-  lc.setRow(0,0,happy[0]);
-  lc.setRow(0,1,happy[1]);
-  lc.setRow(0,2,happy[2]);
-  lc.setRow(0,3,happy[3]);
-  lc.setRow(0,4,happy[4]);
-  lc.setRow(0,5,happy[5]);
-  lc.setRow(0,6,happy[6]);
-  lc.setRow(0,7,happy[7]);
+void display_icon(byte icon[]){
+  for(int i = 0; i < 8; i++){
+    lc.setRow(0,i,icon[i]);
+  }
 }
 
-void sadSmileyMatrix(){
-  byte sad[] = {B00111100,B01000010,B10100101,B10011001,B10011001,B10100101,B01000010,B00111100};
 
-  lc.setRow(0,0,sad[0]);
-  lc.setRow(0,1,sad[1]);
-  lc.setRow(0,2,sad[2]);
-  lc.setRow(0,3,sad[3]);
-  lc.setRow(0,4,sad[4]);
-  lc.setRow(0,5,sad[5]);
-  lc.setRow(0,6,sad[6]);
-  lc.setRow(0,7,sad[7]);
-}
-
-void heartFromMom(){
-  byte heart[] = {B00000000,B01100110,B11111111,B11111111,B01111110,B00111100,B00011000,B00000000};
-
-  lc.setRow(0,0,heart[0]);
-  lc.setRow(0,1,heart[1]);
-  lc.setRow(0,2,heart[2]);
-  lc.setRow(0,3,heart[3]);
-  lc.setRow(0,4,heart[4]);
-  lc.setRow(0,5,heart[5]);
-  lc.setRow(0,6,heart[6]);
-  lc.setRow(0,7,heart[7]);
-}
 
 void send_data(int temperature_reading){
   Serial.println("Do stuff here");
