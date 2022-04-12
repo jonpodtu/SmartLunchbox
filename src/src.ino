@@ -30,8 +30,10 @@ float sunlight_threshold = 10.0; // This is for determining if the lunchbox has 
 int counter_temp = 0;
 
 // Assign the touch sensor
-int debounceTime = 50; //debounce time for touch sensor
-int tocuhPin = 15;
+bool lc_on = true;
+int buttonPin = 15;
+int buttonState = 0;
+unsigned int old_time;
 
 int signal = 0;
 String input;
@@ -65,7 +67,7 @@ void setup(){
   startMillis = millis();
 
   // Define pinmode for toch-sensor
-  pinMode(tocuhPin, INPUT);
+  pinMode(buttonPin, INPUT);
 
 }
 
@@ -99,14 +101,22 @@ void loop(){
   }
 
   // Activate display
-  
-  if (digitalRead(tocuhPin) == HIGH){
-    display(counter_temp, sunlight);
-  }
-  else {
+  if ((lc_on) && (millis() > old_time))
+  {
+    Serial.println("Resetting display");
     lc.clearDisplay(0);
+    lc_on = false;
   }
-  delay(debounceTime);
+  else if (!lc_on)
+  {
+    buttonState = digitalRead(buttonPin);
+    if(buttonState == HIGH)
+    {
+      display(counter_temp, sunlight);
+      lc_on = true;
+      old_time = millis() + 7000;
+    }
+  }
 }
 
 //////////////////////////////
