@@ -29,7 +29,7 @@ float sunlight_threshold = 10.0; // This is for determining if the lunchbox has 
 // Global varibles to use with the counter:
 int counter_temp = 0;
 
-// Assign the touch sensor
+// Assign the touch sensor 
 bool lc_on = true;
 int buttonPin = 15;
 int buttonState = 0;
