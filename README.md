@@ -13,7 +13,7 @@ DIN: 4
 __Photoresistor__
 Analog Signal: 27
 
-__18B20 Temperature Sensor__
+__DS18B20 Temperature Sensor__
 Digital Signal: 26
 
 __TTP223 Touch Sensor Module__
