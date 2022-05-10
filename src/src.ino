@@ -33,7 +33,7 @@ float temp_threshold = 8.0;
 int counter_temp = 0;
 int counter_threshold = 8;
 
-// Assign the touch sensor
+// Assign the touch sensor 
 bool lc_on = true;
 int buttonPin = 15;
 int buttonState = 0;
